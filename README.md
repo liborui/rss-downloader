@@ -1,1 +1,38 @@
-# rss-downloader-rs
+# Foobar
+
+Foobar is a Python library for dealing with word pluralization.
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+```bash
+pip install foobar
+```
+
+## Usage
+
+```python
+import foobar
+
+foobar.pluralize('word') # returns 'words'
+foobar.pluralize('goose') # returns 'geese'
+foobar.singularize('phenomena') # returns 'phenomenon'
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## Roadmap
+
+
+## Acknowledgment
+https://diygod.me/download-webhook/
+
+## References
+[【Rust 每周一库】hyper - 底层 http 库](https://www.chainnews.com/articles/617213876836.htm)
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)

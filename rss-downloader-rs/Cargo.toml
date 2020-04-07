@@ -1,0 +1,21 @@
+[package]
+name = "rss-downloader-rs"
+version = "0.1.0"
+authors = ["Borui Li <libr@emnets.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# [dependencies]
+# serde_json = "1.0"
+# serde = { version = "1.0", features = ["derive"] }
+
+[dependencies]  
+hyper = "0.13"  
+tokio = { version = "0.2", features = ["full"] }  
+futures-util = { version = "0.3", default-features = false }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+cmd_lib = "0.7.8"
+log = "0.4.5"
+simple_logger = "1.6.0"
