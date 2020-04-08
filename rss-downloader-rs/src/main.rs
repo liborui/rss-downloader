@@ -26,25 +26,29 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     match (req.method(), req.uri().path()) {
         (&Method::POST, "/") => {
             // 这里需要完整的body，所以需要等待全部的stream并把它们变为bytes
+            info!("Recieved a download request!");
             let full_body = hyper::body::to_bytes(req.into_body()).await?;
             let parse_param: ParamsFromHttp = serde_json::from_str(&str::from_utf8(&full_body).unwrap()).unwrap();// may needs rebuild, fail to react to error json
-            info!("{}", parse_param.url);
+            info!("Dest. URL: {}", parse_param.url);
+            info!("Video Title: {}", parse_param.video_title);
+            info!("Invoker is: {}", parse_param.invoker);
 
             let args: Vec<String> = env::args().collect();
             let abs_save_addr = &args[1];
-            info!("{}", abs_save_addr);
+            info!("Video will be saved to: {}", abs_save_addr);
             
             let video_title_without_illegal_char = parse_param.video_title
                 .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|","");
 
-            info!("{}", video_title_without_illegal_char);
+            info!("Video title without illegal char: {}", video_title_without_illegal_char);
             
             let video_save_folder = format!("{}/BilibiliDownloads/{}", abs_save_addr, video_title_without_illegal_char);
-            info!("{}", video_save_folder);
+            // info!("{}", video_save_folder);
             fs::create_dir_all(video_save_folder).unwrap_or_else(|why| {
-                println!("! {:?}", why.kind());
+                warn!("! {:?}", why.kind());
             });
 
+            info!("Start download!");
             let video_save_folder = format!("{}/BilibiliDownloads/{}", abs_save_addr, video_title_without_illegal_char);
             //disabled log saving, which will cause unexpected exit of you-get
             // let log_save_addr = format!("{}/BilibiliDownloads/you-get.log", abs_save_addr); // .args(&[">>", &log_save_addr])
