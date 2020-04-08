@@ -7,9 +7,9 @@ use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::str; // for byte -> str
 use std::env; // for input args
-// use cmd_lib::{run_cmd, run_fun, CmdResult, FunResult};// for exec you-get
-use cmd_lib::{run_cmd};// for exec you-get
-
+use std::fs;
+use std::process::Command;
+use std::io::{self, Write};
 
 
 #[derive(Serialize, Deserialize)]
@@ -34,24 +34,30 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
             let abs_save_addr = &args[1];
             info!("{}", abs_save_addr);
             
-            // let space_fixed_video_title = format!("\"{}\"", parse_param.video_title
-            //     .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|",""));
-            let space_fixed_video_title = parse_param.video_title
-                .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|","")
-                .replace(r" ", r"\ ");
+            let video_title_without_illegal_char = parse_param.video_title
+                .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|","");
 
-            info!("{}", space_fixed_video_title);
+            info!("{}", video_title_without_illegal_char);
+            
+            let video_save_folder = format!("{}/BilibiliDownloads/{}", abs_save_addr, video_title_without_illegal_char);
+            info!("{}", video_save_folder);
+            fs::create_dir_all(video_save_folder).unwrap_or_else(|why| {
+                println!("! {:?}", why.kind());
+            });
 
-            match run_cmd!("mkdir -p {}/BilibiliDownloads/{}", abs_save_addr, space_fixed_video_title){
-                Ok(_val)=>info!("Folder created!"),
-                Err(err)=>warn!("Folder create failed! {}", err),           
-            };
-            info!("{}", space_fixed_video_title);
-            match run_cmd!("you-get --playlist {0} -o {1}/BilibiliDownloads/{2}", 
-                parse_param.url, abs_save_addr, space_fixed_video_title){
-                Ok(_val)=>info!("Download OK!"),
-                Err(err)=>warn!("Download failed! {}", err),
-            };//Needs further optimization >> {1}/BilibiliDownloads/you-get.log
+            let video_save_folder = format!("{}/BilibiliDownloads/{}", abs_save_addr, video_title_without_illegal_char);
+            //disabled log saving, which will cause unexpected exit of you-get
+            // let log_save_addr = format!("{}/BilibiliDownloads/you-get.log", abs_save_addr); // .args(&[">>", &log_save_addr])
+            let you_get_output = Command::new("you-get")
+                .args(&["--playlist", &parse_param.url])
+                .args(&["-o", &video_save_folder])
+                .output()
+                .expect("failed to execute process");
+            info!("You-get output is: ");
+            io::stdout().write_all(&you_get_output.stdout).unwrap();
+            info!("You-get status: {}", you_get_output.status);
+            // info!("stderr");
+            // io::stderr().write_all(&you_get_output.stderr).unwrap();
 
             *response.body_mut() = Body::from("Try POSTing data to /echo");
         },
