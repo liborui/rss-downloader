@@ -1,6 +1,18 @@
-# Foobar
+# Automatic video downloader with RSS and IFTTT (AVDRI)
 
-Foobar is a Python library for dealing with word pluralization.
+
+你是否还在困扰于B站收藏夹中的“已失效视频”？
+你是否纠结如何将B站你想收藏的视频自动下载到电脑上？
+
+AVDRI是一个
+
+```mermaid
+op1=>operation: My Ope
+op2=>operation: My Ope
+op3=>operation: My Ope
+
+op1(right)->op2(right)->op3
+```
 
 ## Installation
 
