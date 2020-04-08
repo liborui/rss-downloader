@@ -34,13 +34,21 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
             let abs_save_addr = &args[1];
             info!("{}", abs_save_addr);
             
-            match run_cmd!("mkdir -p {}/BilibiliDownloads/{}", abs_save_addr, parse_param.video_title){
+            // let space_fixed_video_title = format!("\"{}\"", parse_param.video_title
+            //     .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|",""));
+            let space_fixed_video_title = parse_param.video_title
+                .replace("\\", "").replace("/","").replace(":", "").replace("*", "").replace("?", "").replace("\"","").replace("<","").replace(">","").replace("|","")
+                .replace(r" ", r"\ ");
+
+            info!("{}", space_fixed_video_title);
+
+            match run_cmd!("mkdir -p {}/BilibiliDownloads/{}", abs_save_addr, space_fixed_video_title){
                 Ok(_val)=>info!("Folder created!"),
                 Err(err)=>warn!("Folder create failed! {}", err),           
             };
-
+            info!("{}", space_fixed_video_title);
             match run_cmd!("you-get -o {1}/BilibiliDownloads/{2} --playlist {0}", 
-                parse_param.url, abs_save_addr, parse_param.video_title){
+                parse_param.url, abs_save_addr, space_fixed_video_title){
                 Ok(_val)=>info!("Download OK!"),
                 Err(err)=>warn!("Download failed! {}", err),
             };//Needs further optimization >> {1}/BilibiliDownloads/you-get.log
