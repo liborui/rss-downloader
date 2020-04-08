@@ -47,7 +47,7 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
                 Err(err)=>warn!("Folder create failed! {}", err),           
             };
             info!("{}", space_fixed_video_title);
-            match run_cmd!("you-get -o {1}/BilibiliDownloads/{2} --playlist {0}", 
+            match run_cmd!("you-get --playlist {0} -o {1}/BilibiliDownloads/{2}", 
                 parse_param.url, abs_save_addr, space_fixed_video_title){
                 Ok(_val)=>info!("Download OK!"),
                 Err(err)=>warn!("Download failed! {}", err),
