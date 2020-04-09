@@ -149,6 +149,13 @@ cargo run <本地要存储下载视频的地址>
 
 ### 4. 测试
 
+以一个视频为例，在前面配置完毕之后，使用命令行`curl`进行测试
+```bash
+curl -X POST -H "Content-Type:application/json" -d '{"invoker": "myvideo", "url": "https://www.bilibili.com/video/av625228717", "video_title": "骁话一下：当美国疫情爆发，每一个美式问题都在勇闯天涯"}' http://rss-download.stayreals.cn:1234
+```
+
+如果Rust服务器端开始下载，即表示配置成功
+
 ## 贡献
 欢迎Pull requests。
 因为自己刚接触几天的Rust语言，语法上几乎都是不清楚的地方，希望与大家共同优化。
