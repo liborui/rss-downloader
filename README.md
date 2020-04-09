@@ -1,3 +1,19 @@
+- [**A**utomatic **V**ideo **D**ownloader with **R**SS and **I**FTTT (AVDRI)](#automatic-video-downloader-with-rss-and-ifttt-avdri)
+  - [用到的工具](#%e7%94%a8%e5%88%b0%e7%9a%84%e5%b7%a5%e5%85%b7)
+  - [安装与使用](#%e5%ae%89%e8%a3%85%e4%b8%8e%e4%bd%bf%e7%94%a8)
+    - [1. 监控RSS更新](#1-%e7%9b%91%e6%8e%a7rss%e6%9b%b4%e6%96%b0)
+    - [2. IFTTT配置](#2-ifttt%e9%85%8d%e7%bd%ae)
+    - [2.5. `frp` 配置（非必需）](#25-frp-%e9%85%8d%e7%bd%ae%e9%9d%9e%e5%bf%85%e9%9c%80)
+    - [3. rss-downloader-rs运行](#3-rss-downloader-rs%e8%bf%90%e8%a1%8c)
+    - [4. 测试](#4-%e6%b5%8b%e8%af%95)
+  - [贡献](#%e8%b4%a1%e7%8c%ae)
+  - [未来计划](#%e6%9c%aa%e6%9d%a5%e8%ae%a1%e5%88%92)
+  - [致谢](#%e8%87%b4%e8%b0%a2)
+  - [License](#license)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 # **A**utomatic **V**ideo **D**ownloader with **R**SS and **I**FTTT (AVDRI)
 
 - 你是否还在困扰于B站收藏夹中的“已失效视频”？
@@ -112,24 +128,37 @@ subdomain = rss-download
 -> Rust服务器调用you-get工具下载视频 //本节为这一步
 ```
 
+克隆本仓库
 ```bash
 git clone https://github.com/liborui/rss-downloader-rs.git
 ```
-### Attention
-Windows build 前要安装Visual C++ build tools
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+编译
+```bash
+cd rss-downloader-rs/rss-downloader.rs
+cargo build
+```
 
-## Roadmap
+运行
+```bash
+cargo run <本地要存储下载视频的地址>
+```
+本工具会在其下建立`BilibiliDownloads`文件夹，并按照视频标题建立子文件夹存储视频。
 
+[注意] Windows 使用`cargo`编译前 前要安装Visual C++ build tools。
 
-## Acknowledgment
-https://diygod.me/download-webhook/
+### 4. 测试
 
-## References
-[【Rust 每周一库】hyper - 底层 http 库](https://www.chainnews.com/articles/617213876836.htm)
+## 贡献
+欢迎Pull requests。
+因为自己刚接触几天的Rust语言，语法上几乎都是不清楚的地方，希望与大家共同优化。
+
+## 未来计划
+
+- [] 重构代码
+
+## 致谢
+感谢RSSHub维护者@[DIYgod](https://github.com/DIYgod)与you-get维护者@[Mort Yao](https://github.com/soimort)大佬。
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
