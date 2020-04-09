@@ -44,19 +44,25 @@ https://rsshub.app/bilibili/fav/922919/919265919
 
 准备好了之后可以在浏览器中打开RSSHub路由（截止发稿时访问仍需要梯子），查看一下自己的路由是否存在。
 
-<<<<<<< HEAD
 ### 2. IFTTT配置
-=======
-### 2.IFTTT配置
->>>>>>> e3a82fbdca3752615636682527628c73f048ce6c
 ```c
 投币/收藏到指定收藏夹 -> 
 触发RSS更新 -> IFTTT.com检测RSS更新并通过POST命令发送给我们实现的Rust服务器 //本节为这一步
 -> Rust服务器调用you-get工具下载视频
 ```
+![IFTTT Config](./meta/IFTTT.jpg)
 
 ### 3. `frp` 配置（非必需）
+```c
+投币/收藏到指定收藏夹 -> 
+触发RSS更新 -> IFTTT.com检测RSS更新并通过POST命令发送给我们实现的Rust服务器 //本节为这一步的辅助
+-> Rust服务器调用you-get工具下载视频
+```
+
 ![Network structure](./meta/Ntwk_structure.png)
+
+
+
 ### Attention
 Windows build 前要安装Visual C++ build tools
 ## Contributing
