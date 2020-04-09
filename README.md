@@ -42,7 +42,9 @@ https://space.bilibili.com/922919/favlist?fid=919265919
 https://rsshub.app/bilibili/fav/922919/919265919
 ```
 
-准备好了之后可以在浏览器中打开RSSHub路由（截止发稿时访问仍需要梯子），查看一下自己的路由是否存在。
+准备好了之后可以在浏览器中打开RSSHub路由（截止发文时访问仍需要梯子），查看一下自己的路由是否存在。
+
+当然，也可以自建RSSHub服务或使用其他方式订阅RSS源，获取视频地址进行下载。
 
 ### 2. IFTTT配置
 ```c
@@ -50,19 +52,69 @@ https://rsshub.app/bilibili/fav/922919/919265919
 触发RSS更新 -> IFTTT.com检测RSS更新并通过POST命令发送给我们实现的Rust服务器 //本节为这一步
 -> Rust服务器调用you-get工具下载视频
 ```
+在IFTTT网站上建立账号，新建Applet，`IF` 处选择`RSS`，填入上一步得到的RSS Feed网址，`THEN`处选择`Webhook`，配置为以下截图的形式：
+
 ![IFTTT Config](./meta/IFTTT.jpg)
 
-### 3. `frp` 配置（非必需）
+`URL`填写运行本Rust工具主机的IP地址和本工具开放的端口（默认为`3000`），如果希望将视频下载到没有独立IP地址的设备，则需要借助`Frp`进行内网穿透，参见第2.5节；
+
+`Method`选择`POST`，选择其他的也可以，本工具默认为POST；
+
+`Content type`选择`json`；
+
+`Body`的格式如下：
+```json
+{
+    "invoker": "myIFTTT",           //随意，本来是用来区分不同的订阅来源的
+    "url": "{{EntryURL}}",          //通过点击页面的Add Ingredient添加
+    "video_title": "{{EntryTitle}}" //通过点击页面的Add Ingredient添加
+}
+```
+
+点击保存即可。
+
+### 2.5. `frp` 配置（非必需）
 ```c
 投币/收藏到指定收藏夹 -> 
 触发RSS更新 -> IFTTT.com检测RSS更新并通过POST命令发送给我们实现的Rust服务器 //本节为这一步的辅助
 -> Rust服务器调用you-get工具下载视频
 ```
 
+上一步中提到，如果希望将视频下载到没有独立IP地址的设备，则需要借助`Frp`进行内网穿透。
+此时网络情况如下图所示，我们需要在一个有固定IP的机器上（一般为阿里云/腾讯云等的云主机，以下以`云主机`代称）和下载电脑（以下以`下载机`代称）上配置`Frp`。
 ![Network structure](./meta/Ntwk_structure.png)
 
+关于`Frp`网上的教程很多，不再赘述，以下仅提供一个可用的配置作为参考。
+`云主机`为`Frp`的服务端，配置加入`frps.ini`
+```
+（前面有一些默认配置，可以不改，默认供客户端连接的端口7000）
+vhost_http_port = 1234
+subdomain_host = stayreals.cn
+```
+`下载机`为`Frp`的客户端，配置加入`frpc.ini`
+```
+[common]
+server_addr = （云主机IP）
+server_port = 7000（默认）
 
+[rss_downloader]
+type = http
+local_port = 3000
+subdomain = rss-download
+```
+两端都运行起来，从命令行日志观察到连接上即可。
 
+### 3. rss-downloader-rs运行
+
+```c
+投币/收藏到指定收藏夹 -> 
+触发RSS更新 -> IFTTT.com检测RSS更新并通过POST命令发送给我们实现的Rust服务器 
+-> Rust服务器调用you-get工具下载视频 //本节为这一步
+```
+
+```bash
+git clone https://github.com/liborui/rss-downloader-rs.git
+```
 ### Attention
 Windows build 前要安装Visual C++ build tools
 ## Contributing
