@@ -59,9 +59,9 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
                 .expect("failed to execute process");
             info!("You-get output is: ");
             io::stdout().write_all(&you_get_output.stdout).unwrap();
+            info!("You-get error info: ");
+            io::stderr().write_all(&you_get_output.stderr).unwrap();
             info!("You-get status: {}", you_get_output.status);
-            // info!("stderr");
-            // io::stderr().write_all(&you_get_output.stderr).unwrap();
 
             *response.body_mut() = Body::from("Try POSTing data to /echo");
         },
